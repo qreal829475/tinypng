@@ -1,33 +1,31 @@
 
 var tinify = require("tinify");
 var fs = require("fs");
+var colors = require('colors');
 
 var KEY = 'ljqA2OiiCvagv3PMWDISZtCzntl';
 if(!KEY){
-    console.log('If you wanna do something.  Please give us your KEY!');
+    console.log('If you wanna do something.  Please give us your KEY!'.red);
     return;
 }else{
     tinify.key = KEY;
 }
-/*fs.readdir("source", function (err, files) {
-    console.log(files);
-});*/
 var files = readDir('source', []);
-console.log(files);
+console.log('all files pushed.'.green);
 
-/*deleteFolder("target");
+deleteFolder("target");
 fs.mkdir("target", function(){
-    console.log('create_');
-});*/
+    console.log('create "target" success.'.green);
+});
 
-/*
+
 fs.readFile("unoptimized.jpg", function(err, sourceData) {
     if (err) throw err;
     tinify.fromBuffer(sourceData).toBuffer(function(err, resultData) {
         if (err) throw err;
         // ...
     });
-});*/
+});
 
 
 /*公共方法*/
@@ -54,10 +52,11 @@ function readDir(path, arr){
         files.forEach(function(file,index){
             var curPath = path + "/" + file;
             if(fs.statSync(curPath).isDirectory()) {
-                files[index] = [];
-                readDir(curPath, files[index]);
+                files[index] = {
+                    path: curPath,
+                    files: readDir(curPath, files[index])
+                };
             } else {
-                // files[index] = fs.readdir(curPath);
             }
         });
     }
