@@ -7,9 +7,12 @@ var KEY = 'ljqA2OiiCvagv3PMWDISZtCzntl';
 if(!KEY){
     console.log('If you wanna do something.  Please give us your KEY!'.red);
     return;
-}else{
-    tinify.key = KEY;
 }
+
+
+tinify.key = KEY;
+// tinify.proxy = "http://user:pass@192.168.0.1:8080";
+
 var files = readDir('source', []);
 console.log('all files pushed.'.green);
 
@@ -18,14 +21,7 @@ fs.mkdir("target", function(){
     console.log('create "target" success.'.green);
 });
 
-
-fs.readFile("unoptimized.jpg", function(err, sourceData) {
-    if (err) throw err;
-    tinify.fromBuffer(sourceData).toBuffer(function(err, resultData) {
-        if (err) throw err;
-        // ...
-    });
-});
+tinypngFile(files, 'source');
 
 
 /*公共方法*/
@@ -61,4 +57,23 @@ function readDir(path, arr){
         });
     }
     return files;
+}
+
+
+function tinypngFile(files, path) {
+    files.forEach(function(file,index){
+        if(typeof file == 'object'){
+            tinypngFile(file.files, file.path);
+        }else{
+            if(!!path) file  = path + "/" + file;
+            fs.readFile(file, function(err, sourceData) {
+                if (err) throw err;
+                tinify.fromBuffer(sourceData).toBuffer(function(err, resultData) {
+                    if (err) throw err;
+                    // ...
+                });
+            });
+            console.log(file);
+        }
+    });
 }
