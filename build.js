@@ -1,27 +1,25 @@
-
 var tinify = require("tinify");
 var fs = require("fs");
 var colors = require('colors');
 
-var KEY = 'ljqA2OiiCvagv3PMWDISZtCzntl';
+var KEY = 'IjqA2OiiCvagv3PMWDISZtCznthd7VRi';
 if(!KEY){
     console.log('If you wanna do something.  Please give us your KEY!'.red);
     return;
 }
 
-
 tinify.key = KEY;
-// tinify.proxy = "http://user:pass@192.168.0.1:8080";
 
-var files = readDir('source', []);
-console.log('all files pushed.'.green);
+// var files = readDir('source', []);
+// console.log('all files pushed.'.green);
 
-deleteFolder("target");
-fs.mkdir("target", function(){
-    console.log('create "target" success.'.green);
-});
+// deleteFolder("target");
+// fs.mkdir("target", function(){
+//     console.log('create "target" success.'.green);
+// });
 
-tinypngFile(files, 'source');
+console.log("compressionCount:"+ tinify.compressionCount);
+
 
 
 /*公共方法*/
@@ -68,6 +66,11 @@ function tinypngFile(files, path) {
             if(!!path) file  = path + "/" + file;
             fs.readFile(file, function(err, sourceData) {
                 if (err) throw err;
+
+                 if (err instanceof tinify.ConnectionError ||
+                    err instanceof tinify.ServerError){
+                    console.log('compress failed.'+srcfile+', recompress.');
+                }
                 tinify.fromBuffer(sourceData).toBuffer(function(err, resultData) {
                     if (err) throw err;
                     // ...
