@@ -17,6 +17,7 @@ if(!global.key){
 
 console.log("Start do preparation work.");
 var files = file.readDir("source");
+console.log(files);
 file.deleteFolder("target");
 fs.mkdir("target");
 file.copy('source', 'target');

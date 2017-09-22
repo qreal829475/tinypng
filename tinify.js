@@ -1,8 +1,7 @@
 var tinify = require("tinify");
+var fs = require("fs");
 
-// tinify.key = global.key;
-
-function tinypngFile(files, path) {
+function tinifyCompress(files, path) {
     files.forEach(function(file,index){
         if(typeof file == 'object'){
             tinypngFile(file.files, file.path);
@@ -20,7 +19,6 @@ function tinypngFile(files, path) {
                 //     if (err) throw err;
                 //     // ...
                 // });
-                // tinify.fromFile(file).toFile(file);
             });
             console.log(file);
         }
