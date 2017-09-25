@@ -24,26 +24,34 @@ var deleteFolder = function(path) {
 * 读取文件夹 
 * 
 * 返回文件夹内容信息：文件名和文件夹名
+* type :    为空    表示返回的文件地址为绝对地址
+*           "r"     表示返回的文件地址为相对地址
 */
-var readDir = function(path){
+var readDir = function(path, type){
     var files = [];
-    if( fs.existsSync(path) ) {
-        files = fs.readdirSync(path);
-        files.forEach(function(file,index){
-            var curPath = path + "/" + file;
-            if(fs.statSync(curPath).isDirectory()) {
-                files[index] = {
-                    path: curPath,
-                    files: readDir(curPath, files[index])
-                };
-            } else {
-            }
-        });
-        return files;
-    }else{
-        console.log("There doesn't have the folder ----- '"+path+"'.");
-        return;
+
+    function read(path){
+        if( fs.existsSync(path) ) {
+            var allFile = fs.readdirSync(path);
+            allFile.forEach(function(file,index){
+                var curPath = path + "/" + file;
+                if(fs.statSync(curPath).isDirectory()) {
+                    allFile[index] = {
+                        path: type == 'r'? file:curPath,
+                        files: readDir(curPath, allFile[index])
+                    };
+                } else {
+                }
+            });
+            return allFile;
+        }else{
+            console.log("There doesn't have the folder ----- '"+path+"'.".red);
+            return;
+        }
     }
+    
+    files = read(path);
+    return files;
 }
 
 // 复制文件夹到对应目录

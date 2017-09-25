@@ -16,11 +16,11 @@ if(!global.key){
 }
 
 console.log("Start do preparation work.");
-var files = file.readDir("source");
-console.log(files);
-file.deleteFolder("target");
-fs.mkdir("target");
-file.copy('source', 'target');
+file.deleteFolder("backup");
+fs.mkdir("backup");
+file.copy('source', 'backup');
+var files = file.readDir("source", "r");
+// console.log(files);
 console.log("Done preparation work.".green);
 
-console.log("Start tinypng.");
+tinify.compressAllFiles(files, 'source');
