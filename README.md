@@ -6,7 +6,7 @@
 说明：只能对jpg和png图片进行压缩。图片文件格式：png/jpg/jpeg
 
 
-# [TinyPNG](https://tinypng.com)
+# 关于[TinyPNG](https://tinypng.com)
 
 	Smart PNG and JPEG compression
 	
@@ -57,7 +57,7 @@
     "undoFolder": "",          // 不压缩的文件夹(所有文件加名为配置参数的)   eg: _demo
     
     "undoDelete": false        // 是否删除掉不压缩的文件(Boolean)，值只能为true或者false
-    
+    
 }
 
 
