@@ -5,10 +5,15 @@
 
 说明：只能对jpg和png图片进行压缩。图片文件格式：png/jpg/jpeg
 
-###[TinyPNG](https://tinypng.com)
+
+# [TinyPNG](https://tinypng.com)
+
 	Smart PNG and JPEG compression
+	
 	Optimize your images with a perfect balance in quality and file size.
+	
 如果你想进一步了解TinyPNG压缩图片请移步官网[TinyPNG](https://tinypng.com)查看。
+
 
 ![tinypngPanda](http://7xox5k.com1.z0.glb.clouddn.com/tinypngPanda.png)
 
@@ -41,9 +46,7 @@
 
 将压缩配置参数放在compress.json中。
 
-
 {
-
 
     "undoFile": "",            // 不压缩的文件全名   eg:1.jpg
  
@@ -51,13 +54,10 @@
 
     "undoFileType": "",        // 不压缩的文件类型     eg:jpg
     
-
     "undoFolder": "",          // 不压缩的文件夹(所有文件加名为配置参数的)   eg: _demo
-    
-
+    
     "undoDelete": false        // 是否删除掉不压缩的文件(Boolean)，值只能为true或者false
     
-
 }
 
 
