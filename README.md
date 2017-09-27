@@ -53,7 +53,7 @@
     "undoFileName": "",        // 不压缩的文件名称，不限制类型  eg:demo
 
     "undoFileType": "",        // 不压缩的文件类型     eg:jpg
-    
+    
     "undoFolder": "",          // 不压缩的文件夹(所有文件加名为配置参数的)   eg: _demo
     
     "undoDelete": false        // 是否删除掉不压缩的文件(Boolean)，值只能为true或者false
