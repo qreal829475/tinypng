@@ -1,4 +1,5 @@
 var compress = require("./compress.js");
+var fileOperation = require('./file.js');
 var fs = require("fs");
 
 var srcSize = 0;
@@ -27,11 +28,11 @@ function filesTraverse(files, path){
 }
 
 // 删除用户过滤的文件
-function deleteFile(file){
+function deleteFile(filePath){
     if(global.COMPRESS.undoDelete){
         // 删除用户过滤的文件
-        console.log("delete:"+file);
-        fs.unlinkSync(file);
+        console.log("delete:"+filePath);
+        fs.unlinkSync(filePath);
     }
 }
 
@@ -63,33 +64,53 @@ function compressFilesInfo(files, path){
                 var fileName = getFileName(files[i]);
                 var type = fileName.type.toLowerCase();
                 // 仅对图片进行处理png, jpeg, jpg
-                if(type == 'png'||type == 'jpg'||type == 'jpeg'){
+                if(type!='png'&&type!='jpg'&&type!='jpeg'){
                     files[i].path? deleteFile(path+'/'+files[i].path+'/'+files[i]) : deleteFile(path+'/'+files[i]);
-                    files.splice(index,1);
+                    files.splice(i,1);
                 }
                 // 过滤掉用户指定的文件名称
-                if(fileName.name == global.COMPRESS.undoFileName){
-                    files[i].path? deleteFile(path+'/'+files[i].path+'/'+files[i]) : deleteFile(path+'/'+files[i]);
-                    files.splice(index,1);
+                if(!!global.COMPRESS.undoFileName){
+                    if(fileName.name == global.COMPRESS.undoFileName){
+                        files[i].path? deleteFile(path+'/'+files[i].path+'/'+files[i]) : deleteFile(path+'/'+files[i]);
+                        files.splice(i,1);
+                    }
                 }
                 // 过滤掉用户指定的文件类型
-                if(type == global.COMPRESS.undoFileType.toLowerCase()){
-                    files[i].path? deleteFile(path+'/'+files[i].path+'/'+files[i]) : deleteFile(path+'/'+files[i]);
-                    files.splice(index,1);
+                if(!!global.COMPRESS.undoFileType){
+                    if(type == global.COMPRESS.undoFileType.toLowerCase()){
+                        files[i].path? deleteFile(path+'/'+files[i].path+'/'+files[i]) : deleteFile(path+'/'+files[i]);
+                        files.splice(i,1);
+                    }
+                }
+                // 过滤掉用户指定的文件全称
+                if(!!global.COMPRESS.undoFile){
+                    if(files[i] == global.COMPRESS.undoFile){
+                        files[i].path? deleteFile(path+'/'+files[i].path+'/'+files[i]) : deleteFile(path+'/'+files[i]);
+                        files.splice(i,1);
+                    }
                 }
             }else{
-                filesFilter(files[i].files, path+'/'+files[i].path);
+                if(files[i].path == global.COMPRESS.undoFolder){
+                    var deletePath = '';
+                    files[i].path? deletePath=path+'/'+files[i].path : deletePath=path;
+                    if(global.COMPRESS.undoDelete){
+                        fileOperation.deleteFolderSync(deletePath);
+                    }
+                    files.splice(i,1);
+                }else{
+                    filesFilter(files[i].files, path+'/'+files[i].path);
+                }
             }
         }
     }
 
     function filesMap(files, path){
-        files.forEach(function(file,index){
-            if(typeof file == 'object'){
-                filesMap(file.files, path+'/'+file.path);
+        files.forEach(function(element,index){
+            if(typeof element == 'object'){
+                filesMap(element.files, path+'/'+element.path);
             }else{
-                var fileName = getFileName(file);
-                info.allFiles.push(path+'/'+file);
+                var fileName = getFileName(element);
+                info.allFiles.push(path+'/'+element);
             }
         });
     }

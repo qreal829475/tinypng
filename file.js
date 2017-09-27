@@ -4,14 +4,14 @@ var colors = require('colors');
 var stat=fs.stat;
 
 // 删除文件夹
-var deleteFolder = function(path) {
+var deleteFolderSync = function(path) {
     var files = [];
     if( fs.existsSync(path) ) {
         files = fs.readdirSync(path);
         files.forEach(function(file,index){
             var curPath = path + "/" + file;
             if(fs.statSync(curPath).isDirectory()) { // recurse
-                deleteFolder(curPath);
+                deleteFolderSync(curPath);
             } else { // delete file
                 fs.unlinkSync(curPath);
             }
@@ -27,7 +27,7 @@ var deleteFolder = function(path) {
 * type :    为空    表示返回的文件地址为绝对地址
 *           "r"     表示返回的文件地址为相对地址
 */
-var readDir = function(path, type){
+var readDirSync = function(path, type){
     var files = [];
 
     function read(path){
@@ -38,7 +38,7 @@ var readDir = function(path, type){
                 if(fs.statSync(curPath).isDirectory()) {
                     allFile[index] = {
                         path: type == 'r'? file:curPath,
-                        files: readDir(curPath, allFile[index])
+                        files: read(curPath, allFile[index])
                     };
                 } else {
                 }
@@ -54,7 +54,48 @@ var readDir = function(path, type){
     return files;
 }
 
-// 复制文件夹到对应目录
+// 复制文件夹到对应目录       同步
+var copySync = function(src, dst) {
+    // 读取目录中的所有文件/目录    
+    if( fs.existsSync(src) ) {
+        files = fs.readdirSync(src);
+        files.forEach(function(path,index){
+            var _src = src + '/' + path,
+                _dst = dst + '/' + path,
+                readable, writable;
+            var st = fs.statSync(_src);
+            // 判断是否为文件
+            if (st.isFile()) {
+                // 创建读取流
+                readable = fs.createReadStream(_src);
+                // 创建写入流
+                writable = fs.createWriteStream(_dst);
+                // 通过管道来传输流
+                readable.pipe(writable);
+            }
+            // 如果是目录则递归调用自身
+            else if (st.isDirectory()) {
+                existsSync(_src, _dst, copy);
+            }
+        });
+    }
+    
+};
+// 在复制目录前需要判断该目录是否存在，不存在需要先创建目录
+var existsSync = function(src, dst, callback) {
+    // 已存在
+    if (fs.existsSync(dst)) {
+        callback(src, dst);
+    }
+    // 不存在
+    else {
+        fs.mkdirSync(dst);
+        callback(src, dst);
+    }
+};
+
+
+// 复制文件夹到对应目录       异步
 var copy = function(src, dst) {
     // 读取目录中的所有文件/目录
     fs.readdir(src, function(err, paths) {
@@ -84,7 +125,7 @@ var copy = function(src, dst) {
                 }
             });
         });
-    });
+    });    
 };
 // 在复制目录前需要判断该目录是否存在，不存在需要先创建目录
 var exists = function(src, dst, callback) {
@@ -102,6 +143,7 @@ var exists = function(src, dst, callback) {
     });
 };
 
+exports.copySync = copySync;
 exports.copy = copy;
-exports.deleteFolder = deleteFolder;
-exports.readDir = readDir;
+exports.deleteFolderSync = deleteFolderSync;
+exports.readDirSync = readDirSync;

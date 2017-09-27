@@ -18,10 +18,10 @@ if(!global.key){
 // console.log("Start do preparation work.");
 var data_compress = fs.readFileSync( "./compress.json" , "utf-8");
 global.COMPRESS = JSON.parse(data_compress);
-file.deleteFolder("backup");
+file.deleteFolderSync("backup");
 fs.mkdir("backup");
-file.copy('source', 'backup');
-var files = file.readDir("source", "r");
+file.copySync('source', 'backup');
+var files = file.readDirSync("source", "r");
 console.log("Done preparation work.");
 
 tinify.compressAllFiles(files, 'source');
