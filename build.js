@@ -1,7 +1,7 @@
-var file = require("./file.js");
+var file = require("./lib/file.js");
 var colors = require("colors");
 var fs = require("fs");
-var tinify = require("./tinify.js");
+var tinify = require("./lib/tinify.js");
 
 // console.log("Start get keys.");
 var data_key = fs.readFileSync( "./key.json" , "utf-8");
@@ -15,13 +15,34 @@ if(!global.key){
     console.log("Get keys.");
 }
 
-// console.log("Start do preparation work.");
 var data_compress = fs.readFileSync( "./compress.json" , "utf-8");
 global.COMPRESS = JSON.parse(data_compress);
-file.deleteFolderSync("backup");
-fs.mkdir("backup");
-file.copySync('source', 'backup');
-var files = file.readDirSync("source", "r");
+global.sourceFilder = 'source';
+global.outputFilder = 'output';
+
+function handleArgv(param){
+    var theParam = param;
+    theParam.splice(0,2);
+    if(theParam.length == 0) return;
+
+    for(var i = 0; i < theParam.length; i++){
+        var reg1 = /^to\-.*/;
+        var reg1 = /^from\-.*/;
+        if(reg1.test(theParam[i])){
+            global.outputFilder = theParam[i].substring(3);
+            // console.log(theParam[i].substring(3));
+        }else if(reg2.test(theParam[i])) {
+            global.sourceFilder = theParam[i].substring(5);
+        }
+    }
+}
+
+handleArgv(process.argv);
+
+file.deleteFolderSync(global.outputFilder);
+fs.mkdir(global.outputFilder);
+file.copySync(global.sourceFilder,global.outputFilder);
+var files = file.readDirSync(global.sourceFilder, "r");
 console.log("Done preparation work.");
 
-tinify.compressAllFiles(files, 'source');
+tinify.compressAllFiles(files, global.sourceFilder);

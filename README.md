@@ -9,9 +9,9 @@
 # 关于[TinyPNG](https://tinypng.com)
 
 	Smart PNG and JPEG compression
-	
+
 	Optimize your images with a perfect balance in quality and file size.
-	
+
 如果你想进一步了解TinyPNG压缩图片请移步官网[TinyPNG](https://tinypng.com)查看。
 
 
@@ -27,7 +27,7 @@
 	* 将压缩参数填写到compress.json；
 4. 启动执行压缩：
 	* cd到工程目录
-	* node build
+	* node build或者执行start.bat，具体的参数参考下面的使用方法。
 
 
 
@@ -38,9 +38,9 @@
 {
 
     "key": [],      //存放你的key API，  string
-    
+
     "index": 1      //默认从第几个开始读取key， int
-    
+
 }
 
 
@@ -49,15 +49,15 @@
 {
 
     "undoFile": "",            // 不压缩的文件全名   eg:1.jpg
- 
+
     "undoFileName": "",        // 不压缩的文件名称，不限制类型  eg:demo
 
     "undoFileType": "",        // 不压缩的文件类型     eg:jpg
-    
+
     "undoFolder": "",          // 不压缩的文件夹(所有文件加名为配置参数的)   eg: _demo
-    
+
     "undoDelete": false        // 是否删除掉不压缩的文件(Boolean)，值只能为true或者false
-    
+
 }
 
 
@@ -65,6 +65,16 @@
 https://tinypng.com/developers/subscription
 
 ![getapikey](http://7xox5k.com1.z0.glb.clouddn.com/tinypnggetapikey.png)
+
+
+# 使用方法
+方法1. 在终端的该工程目录下输入node build即可，如果需要指定资源路径或者输出路径时，需要增加参数
+
+	资源路径： from-xxx(指定文件夹)
+	结果输出路径： to-xxx(指定文件夹)
+	ps:文件夹不要跨磁盘，否则系统容易报错：需要管理员权限
+
+方法2. 双击start.bat文件，自动使用到默认默认
 
 
 # 测试
