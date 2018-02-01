@@ -79,4 +79,4 @@ https://tinypng.com/developers/subscription
 
 # 测试
 
-测试可用
+目前windows测试可用
